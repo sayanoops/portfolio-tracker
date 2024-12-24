@@ -26,7 +26,13 @@ export function calculatePortfolioMetrics(
     return { ...stock, currentValue: value, change };
   });
 
+  // Sort by performance and ensure no overlap between top and bottom performers
   const sortedByPerformance = [...performanceData].sort((a, b) => b.change - a.change);
+  const topPerformers = sortedByPerformance.slice(0, 3);
+  const remainingStocks = sortedByPerformance.filter(stock => 
+    !topPerformers.some(top => top.id === stock.id)
+  );
+  const bottomPerformers = remainingStocks.slice(-3).reverse();
 
   // Mock sector data (in production, fetch from an API)
   const mockSectors = ['Technology', 'Finance', 'Healthcare', 'Consumer'];
@@ -39,8 +45,8 @@ export function calculatePortfolioMetrics(
     totalValue,
     dailyChange: performanceData.reduce((sum, stock) => sum + stock.change, 0),
     dailyChangePercent: (performanceData.reduce((sum, stock) => sum + stock.change, 0) / stocks.length) * 100,
-    topPerformers: sortedByPerformance.slice(0, 3),
-    bottomPerformers: sortedByPerformance.slice(-3).reverse(),
+    topPerformers,
+    bottomPerformers,
     sectorDistribution
   };
 }

@@ -11,6 +11,9 @@ export function StockForm({ onStockAdded }: { onStockAdded: () => void }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Get current date in YYYY-MM-DD format
+  const today = new Date().toISOString().split('T')[0];
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -100,6 +103,7 @@ export function StockForm({ onStockAdded }: { onStockAdded: () => void }) {
           <input
             type="date"
             required
+            max={today}
             value={purchaseDate}
             onChange={(e) => setPurchaseDate(e.target.value)}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
